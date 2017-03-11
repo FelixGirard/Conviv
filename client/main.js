@@ -201,7 +201,6 @@ Template.mapPostsList.rendered = function() {
         color = "yellow";
       if(code == "3. Rouge")
         color = "red";
-      console.log(color);
       return {
         strokeColor: color,
         strokeWeight: 3

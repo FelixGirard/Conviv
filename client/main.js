@@ -193,7 +193,6 @@ Template.mapPostsList.rendered = function() {
 
   map.data.setStyle(function(feature) {
       var code = feature.getProperty('code');
-      console.log(code);
       var color = 'black';
       if(code == "2. Jaune")
         color = "green";
@@ -206,8 +205,8 @@ Template.mapPostsList.rendered = function() {
         strokeWeight: 3
       };
     });
-  //var bikeLayer = new google.maps.BicyclingLayer();
-  //bikeLayer.setMap(map);
+  var bikeLayer = new google.maps.BicyclingLayer();
+  bikeLayer.setMap(map);
 
   directionsDisplay.setMap(map);
 

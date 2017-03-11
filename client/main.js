@@ -4,7 +4,6 @@ import { Rues } from '../imports/api/data.js';
 
 import './main.html';
 
-
 var directionsService = new google.maps.DirectionsService;
 var directionsDisplay = new google.maps.DirectionsRenderer;
 var mtlcenter = new google.maps.LatLng(45.514609, -73.636982);
@@ -132,12 +131,38 @@ function displayRoute(service, display, origine=mtlcenter, destination=dest) {
     origin: origine,
     destination: destination,
     //waypoints: [{location: 'Montreal, QBC'}, {location: 'Montreal, QBC'}],
+    provideRouteAlternatives: true,
     travelMode: google.maps.TravelMode.DRIVING,
   }, function(response, status) {
     console.log("xdé");
     if (status === google.maps.DirectionsStatus.OK) {
-      display.setDirections(response);
-      console.log("xdé");
+      var color;
+      for (var i = 0, len = response.routes.length; i < len; i++) {
+
+        switch(i){
+          case 1:
+            color = "#ff3300";
+            break;
+          case 2:
+            color = "#0000ff";
+            break;
+          case 2:
+            color = "#00cc66";
+            break;
+          default:
+            color = "#9900ff";
+            break;
+        }
+
+      new google.maps.DirectionsRenderer({
+          map: map,
+          directions: response,
+          routeIndex: i,
+          polylineOptions: { strokeColor: color }
+      });
+    }
+      // display.setDirections(response);
+      // console.log(response);
     } else {
       alert('Could not display directions due to: ' + status);
     }
@@ -168,7 +193,7 @@ Template.mapPostsList.rendered = function() {
   };
   map = new google.maps.Map(document.getElementById("map-canvas"),
     mapOptions);
-  map.data.addGeoJson(test);
+
   map.setCenter(mtlcenter);
   var marker = new google.maps.Marker({
     position: mtlcenter,

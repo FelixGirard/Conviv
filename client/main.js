@@ -4,51 +4,17 @@ import { Rues } from '../imports/api/data.js';
 
 import './main.html';
 
-// Template.hello.onCreated(function helloOnCreated() {
-//   // counter starts at 0
-//   this.counter = new ReactiveVar(0);
-// });
-//
-// Template.hello.helpers({
-//   counter() {
-//     return Template.instance().counter.get();
-//   },
-// });
-//
-// Template.hello.events({
-//   'click button'(event, instance) {
-//     // increment the counter when button is clicked
-//     instance.counter.set(instance.counter.get() + 1);
-//   },
-// });
 
 var directionsService = new google.maps.DirectionsService;
 var directionsDisplay = new google.maps.DirectionsRenderer;
 var mtlcenter = new google.maps.LatLng(45.514609, -73.636982);
 var dest =  new google.maps.LatLng(45.496270, -73.568704);
 
-// function calcRoute() {
-//   var request = {
-//       origin: mtlcenter,
-//       destination: dest,
-//       // Note that Javascript allows us to access the constant
-//       // using square brackets and a string value as its
-//       // "property."
-//       travelMode: google.maps.TravelMode.DRIVING
-//   };
-//   console.log("xd");
-//   directionsService.route(request, function(response, status) {
-//     if (status == google.maps.DirectionsStatus.OK) {
-//       directionsDisplay.setDirections(response);
-//       showSteps(response);
-//     }
-//   });
-// }
-function displayRoute(service, display) {
+function displayRoute(service, display, origine=mtlcenter, destination=dest) {
   console.log("xdé");
   service.route({
-    origin: mtlcenter,
-    destination: dest,
+    origin: origine,
+    destination: destination,
     //waypoints: [{location: 'Montreal, QBC'}, {location: 'Montreal, QBC'}],
     travelMode: google.maps.TravelMode.DRIVING,
   }, function(response, status) {
@@ -101,33 +67,16 @@ Template.mapPostsList.rendered = function() {
   //Session.set('map', true);
 };
 
-Template.hello.events({
+Template.menu.events({
   'click button'(event, instance) {
     // increment the counter when button is clicked
-    displayRoute(directionsService, directionsDisplay);
+    var start = $("#txtorigin").val();
+    var end = $("#txtdest").val();
+    if (start != "" && end != "")
+    {
+      displayRoute(directionsService, directionsDisplay, start, end);
+    }else{
+      displayRoute(directionsService, directionsDisplay);
+    }
   },
 });
-
-// Template.body.onCreated(function() {
-//   // We can use the `ready` callback to interact with the map API once the map is ready.
-//   GoogleMaps.ready('ConvivMap', function(map) {
-//     // Add a marker to the map once it's ready
-//     // var marker = new google.maps.Marker({
-//     //   position: map.options.center,
-//     //   map: map.instance
-//     // });
-//     //var direction = new google.maps.
-//
-//     // var directionsService = new google.maps.DirectionsService;
-//     // var directionsDisplay = new google.maps.DirectionsRenderer({
-//     //   draggable: true,
-//     //   map: map,
-//     //   panel: document.getElementById('right-panel')
-//     // });
-//
-//     var marker = new google.maps.Marker({
-//       position: new google.maps.LatLng(45.514609, -73.636982),
-//       map: map.instance
-//     });
-//   });
-// });

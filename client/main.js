@@ -38,22 +38,22 @@ function EmpruntEco(itdistance, itduration){
     document.getElementById("fixed2").innerHTML = emprunt_carbon
 }
 
-// var feats = [];
-// var test = {"type": "FeatureCollection",
-// "features":feats}
-//     Meteor.call('getRues', {
-//     }, (err, res) => {
-//       if (err) {
-//         alert(err);
-//       } else {
-//         // success!
-//         test = {"type": "FeatureCollection",
-//         "features":res};
-//         map.data.addGeoJson(test);
-//         //var bikeLayer = new google.maps.BicyclingLayer();
-//         //bikeLayer.setMap(map);
-//       }
-//     });
+var feats = [];
+var test = {"type": "FeatureCollection",
+"features":feats}
+    Meteor.call('getRues', {
+    }, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        // success!
+        test = {"type": "FeatureCollection",
+        "features":res};
+        map.data.addGeoJson(test);
+        //var bikeLayer = new google.maps.BicyclingLayer();
+        //bikeLayer.setMap(map);
+      }
+    });
 
 // -- AUTO COMPLETE START --
   var placeSearch, autocomplete;
@@ -322,15 +322,15 @@ Template.mapPostsList.rendered = function() {
       var code = feature.getProperty('code');
       var color = 'black';
       if(code == "2. Jaune")
-        color = "green";
+        color = "orange";
       if(code == "1. Vert")
-        color = "yellow";
+        color = "green";
       if(code == "3. Rouge")
         color = "red";
       return {
-        // strokeColor: color,
-        // strokeWeight: 3,
-        // strokeOpacity: 0.5
+        strokeColor: color,
+        strokeWeight: 3,
+        strokeOpacity: 0.5
       };
     });
   // var bikeLayer = new google.maps.BicyclingLayer();

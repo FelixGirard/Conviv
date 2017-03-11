@@ -51,7 +51,7 @@ text-align:center;
 #calories{
   position:absolute;
   max-width: 65px;
-  bottom: 40px;
+  bottom: 75px;
   right:42px;
   background-color:white;
   border: 3px solid black;
@@ -59,7 +59,7 @@ text-align:center;
 #fixed {
   position:absolute;
   width: 78px;
-  bottom: 40px;
+  bottom: 75px;
   right:106px;
   text-align-last:right;
   background-color:white;
@@ -68,7 +68,7 @@ text-align:center;
 #EmpruntEco {
   position:absolute;
   max-width: 65px;
-  bottom: 63px;
+  bottom: 97px;
   right:42px;
   background-color:white;
   border: 3px solid black;
@@ -76,7 +76,7 @@ text-align:center;
 #fixed2 {
   position:absolute;
   width: 78px;
-  bottom: 63px;
+  bottom: 97px;
   right:106px;
   text-align-last:right;
   background-color:white;
@@ -86,7 +86,7 @@ text-align:center;
 #fixed3 {
   position:absolute;
   width: 100px;
-  bottom: -70px;
-  left:5px;
+  bottom: -67px;
+  right:89px;
   text-align-last:right;
 }

@@ -14,28 +14,46 @@ var txt_dest_pos;
 var itduration;
 var itdistance;
 var temp;
+var selectedmode = 0;
 
 var autoorigin = false;
 var autodest = false;
 
 var mypos;
 
-var feats = [];
-var test = {"type": "FeatureCollection",
-"features":feats}
-    Meteor.call('getRues', {
-    }, (err, res) => {
-      if (err) {
-        alert(err);
-      } else {
-        // success!
-        test = {"type": "FeatureCollection",
-        "features":res};
-        map.data.addGeoJson(test);
-        //var bikeLayer = new google.maps.BicyclingLayer();
-        //bikeLayer.setMap(map);
-      }
-    });
+var calories;
+var emprunt_carbon;
+
+function Calories_Spend(itdistance){
+    calories = itdistance * 0.02366;
+    calories = Math.round(calories);
+    document.getElementById("fixed").innerHTML = calories
+
+}
+
+function EmpruntEco(itdistance, itduration){
+    emprunt_carbon = itdistance * 125;
+    emprunt_carbon /= 1000;
+    emprunt_carbon = Math.round(emprunt_carbon);
+    document.getElementById("fixed2").innerHTML = emprunt_carbon
+}
+
+// var feats = [];
+// var test = {"type": "FeatureCollection",
+// "features":feats}
+//     Meteor.call('getRues', {
+//     }, (err, res) => {
+//       if (err) {
+//         alert(err);
+//       } else {
+//         // success!
+//         test = {"type": "FeatureCollection",
+//         "features":res};
+//         //map.data.addGeoJson(test);
+//         //var bikeLayer = new google.maps.BicyclingLayer();
+//         //bikeLayer.setMap(map);
+//       }
+//     });
 
 // -- AUTO COMPLETE START --
   var placeSearch, autocomplete;
@@ -147,13 +165,61 @@ function displayRoute(service, display, origine, destination) {
   console.log("xdé");
   //display.setDirections({routes: []});
   if (origine != null && destination != null) {
+    if(selectedmode === 0){
+      service.route({
+        origin: origine,
+        destination: destination,
+        //waypoints: [{location: 'Montreal, QBC'}, {location: 'Montreal, QBC'}],
+        provideRouteAlternatives: true,
+        travelMode: google.maps.TravelMode.BICYCLING,
+      },
+      function(response, status) {
+        console.log("xdé");
+        if (status === google.maps.DirectionsStatus.OK) {
+          var color;
+          display.setMap(map);
+          display.setDirections(response);
+
+          for (var i = 0, len = response.routes.length; i < len; i++) {
+            itdistance = response.routes[i].legs[0].distance.value;
+            itduration = response.routes[i].legs[0].duration.value;
+            Calories_Spend(itdistance);
+            console.log(calories);
+            EmpruntEco(itdistance);
+            console.log(emprunt_carbon);
+
+            console.log("okéééé");
+            var maRoute = response.routes[0].legs[0];
+            for (var j = 0, len = maRoute.steps.length; j < len; j++) {
+               console.log(maRoute.steps[i].instructions+' -> '+maRoute.steps[i].distance.value);
+              console.log("ok");
+            }
+          }
+            // polylineOptionsActual = {
+            //  strokeColor: color, strokeWeight: 6
+            // };
+          // window.temp = new google.maps.DirectionsRenderer({
+          //     map: map,
+          //     directions: response,
+          //     routeIndex: i,
+          //     polylineOptions: { strokeColor: color, strokeWeight: 6 }
+          // });
+        // }
+          // display.setDirections(response);
+          // console.log(response);
+        } else {
+          //alert('Could not display directions due to: ' + status);
+        }
+      });
+    }else{
   service.route({
     origin: origine,
     destination: destination,
     //waypoints: [{location: 'Montreal, QBC'}, {location: 'Montreal, QBC'}],
     provideRouteAlternatives: true,
-    travelMode: google.maps.TravelMode.BICYCLING,
-  }, function(response, status) {
+    travelMode: google.maps.TravelMode.WALKING,
+  },
+  function(response, status) {
     console.log("xdé");
     if (status === google.maps.DirectionsStatus.OK) {
       var color;
@@ -163,6 +229,10 @@ function displayRoute(service, display, origine, destination) {
       for (var i = 0, len = response.routes.length; i < len; i++) {
         itdistance = response.routes[i].legs[0].distance.value;
         itduration = response.routes[i].legs[0].duration.value;
+        Calories_Spend(itdistance);
+        console.log(calories);
+        EmpruntEco(itdistance);
+        console.log(emprunt_carbon);
       }
         // polylineOptionsActual = {
         //  strokeColor: color, strokeWeight: 6
@@ -180,6 +250,7 @@ function displayRoute(service, display, origine, destination) {
       //alert('Could not display directions due to: ' + status);
     }
   });
+}
 }else{
   //PAS DE BOX SAD
 }
@@ -256,5 +327,31 @@ Template.menu.events({
 Template.menu.events({
   'focus #destautocomplete'(event, instance) {
     dgeolocate();
+  },
+});
+
+Template.menu.events({
+  'click #walk'(event, instance) {
+    selectedmode = 1;
+    displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
+    var aClass = "active";
+    var bgroup = $("#bike");
+    var wgroup = $("#walk");
+    $(bgroup).removeClass(aClass);
+    $(wgroup).addClass(aClass);
+    console.log(selectedmode);
+  },
+});
+
+Template.menu.events({
+  'click #bike'(event, instance) {
+    selectedmode = 0;
+    displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
+    var aClass = "active";
+    var bgroup = $("#bike");
+    var wgroup = $("#walk");
+    $(wgroup).removeClass(aClass);
+    $(bgroup).addClass(aClass);
+    console.log(selectedmode);
   },
 });

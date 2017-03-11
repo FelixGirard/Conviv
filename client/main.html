@@ -8,6 +8,8 @@
 
   {{> menu}}
   {{> mapPostsList}}
+  {{> boite}}
+  {{> boite2}}
 </body>
 
 <template name="mapPostsList">
@@ -20,6 +22,27 @@
 <div id="menu" class="col-sm-12">
     <input class="form-control" id="autocomplete" type="text" name="txtorigin" placeholder="Origine">
     <input class="form-control" id="destautocomplete" type="text" name="txtdest" placeholder="Destination">
-    <button class="btn btn-warning" type="button">Rechercher</button>
+    <ul class="nav nav-pills col-sm-3">
+      <li id="walk" role="presentation" class="active"><a href="#"><i class="fa fa-male fa-3x" aria-hidden="true"></i></a></li>
+      <li id="bike" role="presentation"><a href="#"><i class="fa fa-bicycle fa-3x" aria-hidden="true"></i></a></li>
+    </ul>
 </div>
+</template>
+
+<template name="boite">
+    <div id="fixed">
+        ##
+    </div>
+    <div id="calories" class="col-sm-12">
+        cal/m
+    </div>
+</template>
+
+<template name="boite2">
+    <div id="fixed2">
+        ##
+    </div>
+    <div id="EmpruntEco" class="col-sm-12">
+        g/km
+    </div>
 </template>

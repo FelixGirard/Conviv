@@ -22,22 +22,43 @@ import './main.html';
 //   },
 // });
 
+var directionsService = new google.maps.DirectionsService;
+var directionsDisplay = new google.maps.DirectionsRenderer;
 var mtlcenter = new google.maps.LatLng(45.514609, -73.636982);
 var dest =  new google.maps.LatLng(45.496270, -73.568704);
 
-function calcRoute() {
-  var request = {
-      origin: mtlcenter,
-      destination: dest,
-      // Note that Javascript allows us to access the constant
-      // using square brackets and a string value as its
-      // "property."
-      travelMode: google.maps.TravelMode.DRIVING
-  };
-  console.log("xd");
-  directionsService.route(request, function(response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      directionsDisplay.setDirections(response);
+// function calcRoute() {
+//   var request = {
+//       origin: mtlcenter,
+//       destination: dest,
+//       // Note that Javascript allows us to access the constant
+//       // using square brackets and a string value as its
+//       // "property."
+//       travelMode: google.maps.TravelMode.DRIVING
+//   };
+//   console.log("xd");
+//   directionsService.route(request, function(response, status) {
+//     if (status == google.maps.DirectionsStatus.OK) {
+//       directionsDisplay.setDirections(response);
+//       showSteps(response);
+//     }
+//   });
+// }
+function displayRoute(service, display) {
+  console.log("xdé");
+  service.route({
+    origin: mtlcenter,
+    destination: dest,
+    //waypoints: [{location: 'Montreal, QBC'}, {location: 'Montreal, QBC'}],
+    travelMode: google.maps.TravelMode.DRIVING,
+    avoidTolls: true
+  }, function(response, status) {
+    console.log("xdé");
+    if (status === google.maps.DirectionsStatus.OK) {
+      display.setDirections(response);
+      console.log("xdé");
+    } else {
+      alert('Could not display directions due to: ' + status);
     }
   });
 }
@@ -58,8 +79,6 @@ Template.body.helpers({
 });
 
 Template.mapPostsList.rendered = function() {
-  var directionsService = new google.maps.DirectionsService;
-  var directionsDisplay = new google.maps.DirectionsRenderer;
   var mapOptions = {
     zoom: 12,
     mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -80,13 +99,13 @@ Template.mapPostsList.rendered = function() {
 
   directionsDisplay.setMap(map);
 
-  Session.set('map', true);
+  //Session.set('map', true);
 };
 
 Template.hello.events({
   'click button'(event, instance) {
     // increment the counter when button is clicked
-    calcRoute();
+    displayRoute(directionsService, directionsDisplay);
   },
 });
 

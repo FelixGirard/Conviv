@@ -1,44 +1,30 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Rues } from '../imports/api/data.js';
+import { Rues } from '../imports/api/data.js'
 
 import './main.html';
-
 
 var directionsService = new google.maps.DirectionsService;
 var directionsDisplay = new google.maps.DirectionsRenderer;
 var mtlcenter = new google.maps.LatLng(45.514609, -73.636982);
 var dest =  new google.maps.LatLng(45.496270, -73.568704);
 
-var test = {
-    "type": "FeatureCollection",
-    "features": [
-      {
-        "type": "Feature",
-        "properties": {
-          "letter": "G",
-          "color": "blue",
-          "rank": "7",
-          "ascii": "71"
-        },
-        "geometry": {
-          "type": "Polygon",
-          "coordinates": [
-            [
-              [123.61, -22.14], [122.38, -21.73], [121.06, -21.69], [119.66, -22.22], [119.00, -23.40],
-              [118.65, -24.76], [118.43, -26.07], [118.78, -27.56], [119.22, -28.57], [120.23, -29.49],
-              [121.77, -29.87], [123.57, -29.64], [124.45, -29.03], [124.71, -27.95], [124.80, -26.70],
-              [124.80, -25.60], [123.61, -25.64], [122.56, -25.64], [121.72, -25.72], [121.81, -26.62],
-              [121.86, -26.98], [122.60, -26.90], [123.57, -27.05], [123.57, -27.68], [123.35, -28.18],
-              [122.51, -28.38], [121.77, -28.26], [121.02, -27.91], [120.49, -27.21], [120.14, -26.50],
-              [120.10, -25.64], [120.27, -24.52], [120.67, -23.68], [121.72, -23.32], [122.43, -23.48],
-              [123.04, -24.04], [124.54, -24.28], [124.58, -23.20], [123.61, -22.14]
-            ]
-          ]
-        }
+var feats = [];
+var test = {"type": "FeatureCollection",
+"features":feats}
+    Meteor.call('getRues', {
+    }, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        // success!
+        test = {"type": "FeatureCollection",
+        "features":res};
+        map.data.addGeoJson(test);
+        //var bikeLayer = new google.maps.BicyclingLayer();
+        //bikeLayer.setMap(map);
       }
-    ]
-  };
+    });
 
 function displayRoute(service, display, origine=mtlcenter, destination=dest) {
   console.log("xdé");
@@ -78,9 +64,9 @@ Template.mapPostsList.rendered = function() {
     zoom: 12,
     mapTypeId: google.maps.MapTypeId.ROADMAP
   };
-  map = new google.maps.Map(document.getElementById("map-canvas"),
+  window.map = new google.maps.Map(document.getElementById("map-canvas"),
     mapOptions);
-  map.data.addGeoJson(test);
+
   map.setCenter(mtlcenter);
   var marker = new google.maps.Marker({
     position: mtlcenter,
@@ -89,8 +75,26 @@ Template.mapPostsList.rendered = function() {
   });
   marker.setMap(map);
 
-  var bikeLayer = new google.maps.BicyclingLayer();
-  bikeLayer.setMap(map);
+  map.data.addGeoJson(test);
+
+  map.data.setStyle(function(feature) {
+      var code = feature.getProperty('code');
+      console.log(code);
+      var color = 'black';
+      if(code == "2. Jaune")
+        color = "green";
+      if(code == "1. Vert")
+        color = "yellow";
+      if(code == "3. Rouge")
+        color = "red";
+      console.log(color);
+      return {
+        strokeColor: color,
+        strokeWeight: 3
+      };
+    });
+  //var bikeLayer = new google.maps.BicyclingLayer();
+  //bikeLayer.setMap(map);
 
   directionsDisplay.setMap(map);
 

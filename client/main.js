@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Rues } from '../imports/api/data.js';
 
 import './main.html';
 
@@ -38,6 +39,12 @@ Template.body.helpers({
       };
     }
   }
+});
+
+Template.body.helpers({
+  rues() {
+    return Rues.find({});
+  },
 });
 
 Template.body.onCreated(function() {

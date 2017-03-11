@@ -1,5 +1,6 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
+import { Rues } from '../imports/api/data.js';
 
 import './main.html';
 
@@ -52,6 +53,10 @@ Template.body.helpers({
     // Make sure the maps API has loaded
     if (GoogleMaps.loaded()) {
       // Map initialization options
+      return {
+        center: new google.maps.LatLng(-37.8136, 144.9631),
+        zoom: 8
+      };
     }
   }
 });
@@ -72,7 +77,7 @@ Template.mapPostsList.rendered = function() {
     title:'My Position',
     icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
   });
-  marker.setMap(map);
+});
 
   var bikeLayer = new google.maps.BicyclingLayer();
   bikeLayer.setMap(map);

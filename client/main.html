@@ -5,6 +5,12 @@
 
 <body>
   <h1>Welcome to Meteor!</h1>
+  {{#each rues}}
+      {{> rue}}
+    {{/each}}
+  <div class="map-container">
+  {{> googleMap name="exampleMap" options=exampleMapOptions}}
+  </div>
 
   <!-- <div class="map-container">
   {{> googleMap name="ConvivMap" options=MapOptions}}
@@ -33,4 +39,8 @@
     <li><a href="https://docs.meteor.com" target="_blank">Read the Docs</a></li>
     <li><a href="https://forums.meteor.com" target="_blank">Discussions</a></li>
   </ul>
+</template>
+<template name="rue">
+  <li>{{text}}</li>
+  <li>{{createdAt}}</li>
 </template>

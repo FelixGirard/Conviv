@@ -9,10 +9,8 @@ var directionsService = new google.maps.DirectionsService;
 var directionsDisplay = new google.maps.DirectionsRenderer;
 var mtlcenter = new google.maps.LatLng(45.514609, -73.636982);
 var dest =  new google.maps.LatLng(45.496270, -73.568704);
-var txt_origin_lat;
-var txt_origin_lng;
-var txt_dest_lat;
-var txt_dest_lng;
+var txt_origin_pos;
+var txt_dest_pos;
 
 
 var test = {
@@ -64,8 +62,7 @@ var test = {
     // Get the place details from the autocomplete object.
     var place = autocomplete.getPlace();
 
-    txt_origin_lat = place.geometry.location.lat();
-    txt_origin_lng = place.geometry.location.lng();
+    txt_origin_pos = place.geometry.location;
   }
 
   // Bias the autocomplete object to the user's geographical location,
@@ -106,8 +103,7 @@ var test = {
     // Get the place details from the autocomplete object.
     var place = dautocomplete.getPlace();
 
-    txt_dest_lat = place.geometry.location.lat();
-    txt_dest_lng = place.geometry.location.lng();
+    txt_dest_pos = place.geometry.location;
   }
 
   // Bias the autocomplete object to the user's geographical location,
@@ -192,11 +188,9 @@ Template.mapPostsList.rendered = function() {
 Template.menu.events({
   'click button'(event, instance) {
     // increment the counter when button is clicked
-    var start = $("#txtorigin").val();
-    var end = $("#txtdest").val();
-    if (start != "" && end != "")
+    if (txt_dest_pos != "" && txt_origin_pos != "")
     {
-      displayRoute(directionsService, directionsDisplay, start, end);
+      displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
     }else{
       displayRoute(directionsService, directionsDisplay);
     }

@@ -1,6 +1,6 @@
 <head>
   <title>HackQC - Conviv</title>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdhjyoQHB6dLwMxSQ50RqaRoyJhVnRexc"
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBdhjyoQHB6dLwMxSQ50RqaRoyJhVnRexc&libraries=places"
   type="text/javascript"></script>
 </head>
 
@@ -18,8 +18,8 @@
 
 <template name="menu">
 <div id="menu" class="col-sm-12">
-    <input class="form-control" id="txtorigin" type="text" name="txtorigin" placeholder="Origine">
-    <input class="form-control" id="txtdest" type="text" name="txtdest" placeholder="Destination">
+    <input class="form-control" id="autocomplete" type="text" name="txtorigin" placeholder="Origine">
+    <input class="form-control" id="destautocomplete" type="text" name="txtdest" placeholder="Destination">
     <button class="btn btn-warning" type="button">Rechercher</button>
 </div>
 </template>

@@ -49,7 +49,7 @@ function EmpruntEco(itdistance, itduration){
 //         // success!
 //         test = {"type": "FeatureCollection",
 //         "features":res};
-//         //map.data.addGeoJson(test);
+//         map.data.addGeoJson(test);
 //         //var bikeLayer = new google.maps.BicyclingLayer();
 //         //bikeLayer.setMap(map);
 //       }
@@ -180,21 +180,54 @@ function displayRoute(service, display, origine, destination) {
           display.setMap(map);
           display.setDirections(response);
 
-          for (var i = 0, len = response.routes.length; i < len; i++) {
-            itdistance = response.routes[i].legs[0].distance.value;
-            itduration = response.routes[i].legs[0].duration.value;
-            Calories_Spend(itdistance);
-            console.log(calories);
-            EmpruntEco(itdistance);
-            console.log(emprunt_carbon);
+          var pointsArray = [];
+          pointsArray = response.routes[0].overview_path;
 
-            console.log("okéééé");
-            var maRoute = response.routes[0].legs[0];
-            for (var j = 0, len = maRoute.steps.length; j < len; j++) {
-               console.log(maRoute.steps[i].instructions+' -> '+maRoute.steps[i].distance.value);
-              console.log("ok");
-            }
-          }
+          var point1 = new google.maps.Marker ({
+                                        position:pointsArray[0],
+                                        draggable:true,
+                                        map:map,
+                                        flat:true
+                                        });
+
+                                    var point2 = new google.maps.Marker ({
+                                        position:pointsArray[1],
+                                        draggable:true,
+                                        map:map,
+                                        flat:true
+                                        });
+
+                                    var point3 = new google.maps.Marker ({
+                                        position:pointsArray[2],
+                                        draggable:true,
+                                        map:map,
+                                        flat:true
+                                        });
+
+                                    var point4 = new google.maps.Marker ({
+                                        position:pointsArray[3],
+                                        draggable:true,
+                                        map:map,
+                                        flat:true
+                                        });
+          console.log(response.routes[0].overview_path[0]);
+          console.log(response.routes[0].overview_path[0].lat());
+          console.log(response.routes[0].overview_path[0].lng());
+          // for (var i = 0, len = response.routes.length; i < len; i++) {
+          //   itdistance = response.routes[i].legs[0].distance.value;
+          //   itduration = response.routes[i].legs[0].duration.value;
+          //   Calories_Spend(itdistance);
+          //   console.log(calories);
+          //   EmpruntEco(itdistance);
+          //   console.log(emprunt_carbon);
+          //
+          //   console.log("okéééé");
+          //   var maRoute = response.routes[0].legs[0];
+          //   for (var j = 0, len = maRoute.steps.length; j < len; j++) {
+          //      console.log(maRoute.steps[i].instructions+' -> '+maRoute.steps[i].distance.value);
+          //     console.log("ok");
+          //   }
+          // }
             // polylineOptionsActual = {
             //  strokeColor: color, strokeWeight: 6
             // };
@@ -300,8 +333,8 @@ Template.mapPostsList.rendered = function() {
         // strokeOpacity: 0.5
       };
     });
-  var bikeLayer = new google.maps.BicyclingLayer();
-  bikeLayer.setMap(map);
+  // var bikeLayer = new google.maps.BicyclingLayer();
+  // bikeLayer.setMap(map);
 
   directionsDisplay.setMap(map);
 

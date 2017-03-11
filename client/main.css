@@ -82,3 +82,11 @@ text-align:center;
   background-color:white;
   border: 3px solid black;
 }
+
+#fixed3 {
+  position:absolute;
+  width: 100px;
+  bottom: -70px;
+  left:5px;
+  text-align-last:right;
+}

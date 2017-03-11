@@ -10,24 +10,25 @@ var mtlcenter = new google.maps.LatLng(45.514609, -73.636982);
 var dest =  new google.maps.LatLng(45.496270, -73.568704);
 var txt_origin_pos;
 var txt_dest_pos;
+var itduration;
+var itdistance;
 
-
-var feats = [];
-var test = {"type": "FeatureCollection",
-"features":feats}
-    Meteor.call('getRues', {
-    }, (err, res) => {
-      if (err) {
-        alert(err);
-      } else {
-        // success!
-        test = {"type": "FeatureCollection",
-        "features":res};
-        map.data.addGeoJson(test);
-        //var bikeLayer = new google.maps.BicyclingLayer();
-        //bikeLayer.setMap(map);
-      }
-    });
+// var feats = [];
+// var test = {"type": "FeatureCollection",
+// "features":feats}
+//     Meteor.call('getRues', {
+//     }, (err, res) => {
+//       if (err) {
+//         alert(err);
+//       } else {
+//         // success!
+//         test = {"type": "FeatureCollection",
+//         "features":res};
+//         map.data.addGeoJson(test);
+//         //var bikeLayer = new google.maps.BicyclingLayer();
+//         //bikeLayer.setMap(map);
+//       }
+//     });
 
 // -- AUTO COMPLETE START --
   var placeSearch, autocomplete;
@@ -119,7 +120,7 @@ function displayRoute(service, display, origine=mtlcenter, destination=dest) {
     destination: destination,
     //waypoints: [{location: 'Montreal, QBC'}, {location: 'Montreal, QBC'}],
     provideRouteAlternatives: true,
-    travelMode: google.maps.TravelMode.DRIVING,
+    travelMode: google.maps.TravelMode.BICYCLING,
   }, function(response, status) {
     console.log("xdé");
     if (status === google.maps.DirectionsStatus.OK) {
@@ -140,12 +141,13 @@ function displayRoute(service, display, origine=mtlcenter, destination=dest) {
             color = "#9900ff";
             break;
         }
-
+        itdistance = response.routes[i].legs[0].distance.value;
+        itduration = response.routes[i].legs[0].duration.value;
       new google.maps.DirectionsRenderer({
           map: map,
           directions: response,
           routeIndex: i,
-          polylineOptions: { strokeColor: color }
+          polylineOptions: { strokeColor: color, strokeWeight: 6 }
       });
     }
       // display.setDirections(response);
@@ -202,7 +204,8 @@ Template.mapPostsList.rendered = function() {
         color = "red";
       return {
         strokeColor: color,
-        strokeWeight: 3
+        strokeWeight: 3,
+        strokeOpacity: 0.5
       };
     });
   var bikeLayer = new google.maps.BicyclingLayer();

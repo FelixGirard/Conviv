@@ -1,15 +1,23 @@
 <head>
-  <title>hackqc</title>
+  <title>HackQC - Conviv</title>
+  <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false">   </script>
 </head>
 
 <body>
   <h1>Welcome to Meteor!</h1>
 
-  <div class="map-container">
-  {{> googleMap name="exampleMap" options=exampleMapOptions}}
-  </div>
+  <!-- <div class="map-container">
+  {{> googleMap name="ConvivMap" options=MapOptions}}
+  </div> -->
+  {{> mapPostsList}}
   {{> info}}
 </body>
+
+<template name="mapPostsList">
+  <div id="map">
+    <div id="map-canvas" class="map-container"></div>
+  </div>
+</template>
 
 <template name="info">
   <h2>Learn Meteor!</h2>

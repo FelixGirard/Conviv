@@ -51,7 +51,6 @@ function displayRoute(service, display) {
     destination: dest,
     //waypoints: [{location: 'Montreal, QBC'}, {location: 'Montreal, QBC'}],
     travelMode: google.maps.TravelMode.DRIVING,
-    avoidTolls: true
   }, function(response, status) {
     console.log("xdé");
     if (status === google.maps.DirectionsStatus.OK) {
@@ -65,7 +64,7 @@ function displayRoute(service, display) {
 
 if (Meteor.isClient) {
   Meteor.startup(function() {
-    GoogleMaps.load();
+    //GoogleMaps.load();
   });
 }
 

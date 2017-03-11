@@ -5,30 +5,37 @@ import { Rues } from '../imports/api/data.js'
 import './main.html';
 
 var directionsService = new google.maps.DirectionsService;
-var directionsDisplay = new google.maps.DirectionsRenderer;
+var polylineOptionsActual;
+var directionsDisplay = new google.maps.DirectionsRenderer({polylineOptions: polylineOptionsActual});
 var mtlcenter = new google.maps.LatLng(45.514609, -73.636982);
 var dest =  new google.maps.LatLng(45.496270, -73.568704);
 var txt_origin_pos;
 var txt_dest_pos;
 var itduration;
 var itdistance;
+var temp;
 
-// var feats = [];
-// var test = {"type": "FeatureCollection",
-// "features":feats}
-//     Meteor.call('getRues', {
-//     }, (err, res) => {
-//       if (err) {
-//         alert(err);
-//       } else {
-//         // success!
-//         test = {"type": "FeatureCollection",
-//         "features":res};
-//         map.data.addGeoJson(test);
-//         //var bikeLayer = new google.maps.BicyclingLayer();
-//         //bikeLayer.setMap(map);
-//       }
-//     });
+var autoorigin = false;
+var autodest = false;
+
+var mypos;
+
+var feats = [];
+var test = {"type": "FeatureCollection",
+"features":feats}
+    Meteor.call('getRues', {
+    }, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        // success!
+        test = {"type": "FeatureCollection",
+        "features":res};
+        map.data.addGeoJson(test);
+        //var bikeLayer = new google.maps.BicyclingLayer();
+        //bikeLayer.setMap(map);
+      }
+    });
 
 // -- AUTO COMPLETE START --
   var placeSearch, autocomplete;
@@ -43,6 +50,7 @@ var itdistance;
     // When the user selects an address from the dropdown, populate the address
     // fields in the form.
     autocomplete.addListener('place_changed', fillInAddress);
+    autoorigin = true;
   }
 
   function fillInAddress() {
@@ -50,6 +58,10 @@ var itdistance;
     var place = autocomplete.getPlace();
 
     txt_origin_pos = place.geometry.location;
+    if (autodest && autoorigin)
+    {
+      displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
+    }
   }
 
   // Bias the autocomplete object to the user's geographical location,
@@ -61,6 +73,7 @@ var itdistance;
           lat: position.coords.latitude,
           lng: position.coords.longitude
         };
+        mypos = geolocation
         var circle = new google.maps.Circle({
           center: geolocation,
           radius: position.coords.accuracy
@@ -68,6 +81,12 @@ var itdistance;
         autocomplete.setBounds(circle.getBounds());
       });
     }
+    var marker = new google.maps.Marker({
+      position: mypos,
+      title:'My Position',
+      icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+    });
+    marker.setMap(map);
   }
 // -- AUTO COMPLETE END --
 
@@ -84,6 +103,7 @@ var itdistance;
     // When the user selects an address from the dropdown, populate the address
     // fields in the form.
     dautocomplete.addListener('place_changed', dfillInAddress);
+    autodest = true;
   }
 
   function dfillInAddress() {
@@ -91,6 +111,10 @@ var itdistance;
     var place = dautocomplete.getPlace();
 
     txt_dest_pos = place.geometry.location;
+    if (autodest && autoorigin)
+    {
+      displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
+    }
   }
 
   // Bias the autocomplete object to the user's geographical location,
@@ -109,12 +133,20 @@ var itdistance;
         dautocomplete.setBounds(circle.getBounds());
       });
     }
+    var marker = new google.maps.Marker({
+      position: mypos,
+      title:'My Position',
+      icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+    });
+    marker.setMap(map);
   }
 // -- AUTO COMPLETE END --
 
 //Fonction qui affiche le trajet
-function displayRoute(service, display, origine=mtlcenter, destination=dest) {
+function displayRoute(service, display, origine, destination) {
   console.log("xdé");
+  //display.setDirections({routes: []});
+  if (origine != null && destination != null) {
   service.route({
     origin: origine,
     destination: destination,
@@ -125,37 +157,32 @@ function displayRoute(service, display, origine=mtlcenter, destination=dest) {
     console.log("xdé");
     if (status === google.maps.DirectionsStatus.OK) {
       var color;
-      for (var i = 0, len = response.routes.length; i < len; i++) {
+      display.setMap(map);
+      display.setDirections(response);
 
-        switch(i){
-          case 1:
-            color = "#ff3300";
-            break;
-          case 2:
-            color = "#0000ff";
-            break;
-          case 2:
-            color = "#00cc66";
-            break;
-          default:
-            color = "#9900ff";
-            break;
-        }
+      for (var i = 0, len = response.routes.length; i < len; i++) {
         itdistance = response.routes[i].legs[0].distance.value;
         itduration = response.routes[i].legs[0].duration.value;
-      new google.maps.DirectionsRenderer({
-          map: map,
-          directions: response,
-          routeIndex: i,
-          polylineOptions: { strokeColor: color, strokeWeight: 6 }
-      });
-    }
+      }
+        // polylineOptionsActual = {
+        //  strokeColor: color, strokeWeight: 6
+        // };
+      // window.temp = new google.maps.DirectionsRenderer({
+      //     map: map,
+      //     directions: response,
+      //     routeIndex: i,
+      //     polylineOptions: { strokeColor: color, strokeWeight: 6 }
+      // });
+    // }
       // display.setDirections(response);
       // console.log(response);
     } else {
-      alert('Could not display directions due to: ' + status);
+      //alert('Could not display directions due to: ' + status);
     }
   });
+}else{
+  //PAS DE BOX SAD
+}
 }
 
 if (Meteor.isClient) {
@@ -184,12 +211,6 @@ Template.mapPostsList.rendered = function() {
     mapOptions);
 
   map.setCenter(mtlcenter);
-  var marker = new google.maps.Marker({
-    position: mtlcenter,
-    title:'My Position',
-    icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-  });
-  marker.setMap(map);
 
   map.data.addGeoJson(test);
 
@@ -203,9 +224,9 @@ Template.mapPostsList.rendered = function() {
       if(code == "3. Rouge")
         color = "red";
       return {
-        strokeColor: color,
-        strokeWeight: 3,
-        strokeOpacity: 0.5
+        // strokeColor: color,
+        // strokeWeight: 3,
+        // strokeOpacity: 0.5
       };
     });
   var bikeLayer = new google.maps.BicyclingLayer();
@@ -218,26 +239,22 @@ Template.mapPostsList.rendered = function() {
 
 Template.menu.events({
   'click button'(event, instance) {
-    // increment the counter when button is clicked
     if (txt_dest_pos != "" && txt_origin_pos != "")
     {
       displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
     }else{
-      displayRoute(directionsService, directionsDisplay);
     }
   },
 });
 
 Template.menu.events({
   'focus #autocomplete'(event, instance) {
-    // increment the counter when button is clicked
     geolocate();
   },
 });
 
 Template.menu.events({
   'focus #destautocomplete'(event, instance) {
-    // increment the counter when button is clicked
     dgeolocate();
   },
 });

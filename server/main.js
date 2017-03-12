@@ -1,6 +1,5 @@
 import { Meteor } from 'meteor/meteor';
-import { Rues } from '../imports/api/data.js'
-import { Rues, Accidents } from '../imports/api/data.js'
+import { Rues, Accidents } from '../imports/api/data.js';
 
 Meteor.startup(() => {
   Meteor.methods({

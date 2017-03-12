@@ -1,6 +1,6 @@
 import { Template } from 'meteor/templating';
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Rues } from '../imports/api/data.js'
+import { Rues,Accidents } from '../imports/api/data.js'
 
 import './main.html';
 
@@ -343,9 +343,7 @@ function displayRoute(service, display, origine, destination) {
         //console.log(JSON.stringify(test));
         GEOJSON_DATA = map.data.addGeoJson(test);
         $(".loading").hide();
-        $("#ResultatConvivial").hide();
-        $("#ResultatConvivial").val("87% Convivial");
-        $("#ResultatConvivial").slideUp();
+        $("#ResultatConvivial").slideToggle();
       }
     });
   }

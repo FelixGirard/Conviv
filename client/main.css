@@ -25,6 +25,11 @@ img {
 {
   position:absolute;
   bottom:0;
+  z-index:5;
+  margin-bottom:0;
+  display:none;
+  text-align:center;
+  box-shadow:20px 1px 10px 0 rgba(0, 0, 0, 0.8), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 #menu{
   margin-top:10px;

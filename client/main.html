@@ -5,9 +5,12 @@
 </head>
 
 <body>
-
+  {{> logo}}
   {{> menu}}
   {{> mapPostsList}}
+  <!-- {{> boite}}
+  {{> boite2}} -->
+  {{> share}}
 </body>
 
 <template name="mapPostsList">
@@ -16,10 +19,44 @@
   </div>
 </template>
 
+<template name="logo">
+  <div id="logo" class="logo">
+    <img src="logoseul.png" height=155px width=155px>
+  </div>
+</template>
+
 <template name="menu">
 <div id="menu" class="col-sm-12">
     <input class="form-control" id="autocomplete" type="text" name="txtorigin" placeholder="Origine">
     <input class="form-control" id="destautocomplete" type="text" name="txtdest" placeholder="Destination">
-    <button class="btn btn-warning" type="button">Rechercher</button>
+    <ul class="nav nav-pills col-sm-3">
+      <li id="walk" role="presentation" class="active"><a href="#"><i class="fa fa-male fa-3x" aria-hidden="true"></i></a></li>
+      <li id="bike" role="presentation"><a href="#"><i class="fa fa-bicycle fa-3x" aria-hidden="true"></i></a></li>
+    </ul>
 </div>
 </template>
+
+<template name="share">
+  <div id="fixed3">
+    <button type="button" class="btn btn-info btn-circle btn-xl"><i class="glyphicon glyphicon-envelope"></i></button>
+      {{> shareit}}
+  </div>
+</template>
+
+<!-- <template name="boite">
+    <div id="fixed">
+        ##
+    </div>
+    <div id="calories" class="col-sm-12">
+        cal/m
+    </div>
+</template>
+
+<template name="boite2">
+    <div id="fixed2">
+        ##
+    </div>
+    <div id="EmpruntEco" class="col-sm-12">
+        g/km
+    </div>
+</template> -->

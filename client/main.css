@@ -143,11 +143,13 @@ i#icob{
 }
 
 .tw-share{
-  width :190px;
+  width :190px
+  right:30px;
 }
 
 .fb-share{
   width :190px;
+  right:25px;
 }
 
 .btn-circle.btn-xl {

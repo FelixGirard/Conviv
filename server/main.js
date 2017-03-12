@@ -5,7 +5,7 @@ Meteor.startup(() => {
   Meteor.methods({
 	  getRues: function () {
     console.log("getting rues : " + Rues.find().count());
-		return Rues.find();
+		return Rues.find().fetch();
   }});
   Meteor.methods({
 	  getColor: function (coordonnes) {
@@ -53,7 +53,7 @@ Meteor.startup(() => {
   Meteor.methods({
   getAccidents: function (name) {
     console.log("getting accidents");
-  return Accidents.find({"RUE_ACCDN": name}).fetch();
+ return Accidents.find({"RUE_ACCDN": name}).fetch();
   }});
 // Rues.find({}).forEach(rue => {
 //     Rues.remove(rue._id)

@@ -16,29 +16,35 @@ var itdistance;
 var temp;
 var selectedmode = 0;
 
+var iVert = 0;
+var iJaune = 0;
+var iRouge = 0;
+
 var autoorigin = false;
 var autodest = false;
 
 var mypos;
 var GEOJSON_DATA;
-// var feats = [];
-// var test = {"type": "FeatureCollection",
-//"features":feats}
 
-//    Meteor.call('getRues', {
-//    }, (err, res) => {
-//   if (err) {
-//     console.log("error");
-//     alert(err);
-//   } else {
-//     console.log("success");
-//
-//     // success!
-//     test = {"type": "FeatureCollection",
-//     "features":res};
-//     map.data.addGeoJson(test);
-//       }
-//     });
+
+var feats = [];
+var test = {"type": "FeatureCollection",
+"features":feats}
+
+   Meteor.call('getRues', {
+   }, (err, res) => {
+  if (err) {
+    console.log("error");
+    alert(err);
+  } else {
+    console.log("success");
+
+    // success!
+    var donneeadditionnelle = {"type": "FeatureCollection",
+    "features":res};
+    map.data.addGeoJson(donneeadditionnelle);
+      }
+    });
 
 Meteor.call('getAccidents', "BD PFDS", (err, res) => {
       if (err) {
@@ -249,6 +255,9 @@ Meteor.call('getAccidents', "BD PFDS", (err, res) => {
 
 //Fonction qui affiche le trajet
 function displayRoute(service, display, origine, destination) {
+   iVert = 0;
+   iJaune = 0;
+   iRouge = 0;
   //display.setDirections({routes: []});
   if (origine != null && destination != null) {
     $(".loading").css('visibility', 'visible');
@@ -263,7 +272,7 @@ function displayRoute(service, display, origine, destination) {
       },
       function(response, status) {
     var  coordonness = [];
-    if(response.routes[0].overview_path!=null)
+    if(response.routes[0].overview_path!=null && response.routes[0].overview_path!=undefined)
     {
     for(i=0;i<response.routes[0].overview_path.length;i++)
      coordonness[i] = {lat:response.routes[0].overview_path[i].lat(),lng:response.routes[0].overview_path[i].lng()};
@@ -338,11 +347,16 @@ function displayRoute(service, display, origine, destination) {
         var test = {"type": "FeatureCollection",
         "features":features};
 
+        if(GEOJSON_DATA != undefined && GEOJSON_DATA != null)
+        {
         for (var i = 0; i < GEOJSON_DATA.length; i++)
               map.data.remove(GEOJSON_DATA[i]);
+        }
         //console.log(JSON.stringify(test));
         GEOJSON_DATA = map.data.addGeoJson(test);
         $(".loading").hide();
+        console.log("verts : " + iVert + " jaune : " + iJaune + " rouge : " + iRouge);
+        $("#ResultatConvivial_Contenu").text(((parseFloat(iVert+0.5*iJaune)/parseFloat(iVert+iJaune+iRouge))*100).toFixed(2) + "% Convivial");
         $("#ResultatConvivial").slideToggle();
       }
     });
@@ -407,10 +421,6 @@ function displayRoute(service, display, origine, destination) {
       display.setMap(map);
       display.setDirections(response);
 
-      for (var i = 0, len = response.routes.length; i < len; i++) {
-        itdistance = response.routes[i].legs[0].distance.value;
-        itduration = response.routes[i].legs[0].duration.value;
-      }
         // polylineOptionsActual = {
         //  strokeColor: color, strokeWeight: 6
         // };
@@ -490,11 +500,20 @@ map.setOptions({styles: styles});
       var code = feature.getProperty('code');
       var color = '';
       if(code == "2. Jaune")
+      {
+        iJaune++;
         color = "orange";
+      }
       if(code == "1. Vert")
+      {
+      iVert++;
         color = "green";
+      }
       if(code == "3. Rouge")
+      {
+      iRouge++;
         color = "red";
+      }
       if(code == "4. Manquant")
           color = "white";
       if(code=="5. Interdit aux cyclistes")

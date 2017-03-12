@@ -20,7 +20,7 @@ var autoorigin = false;
 var autodest = false;
 
 var mypos;
-
+var GEOJSON_DATA;
 // var feats = [];
 // var test = {"type": "FeatureCollection",
 //"features":feats}
@@ -251,9 +251,9 @@ Meteor.call('getAccidents', "BD PFDS", (err, res) => {
 function displayRoute(service, display, origine, destination) {
   //display.setDirections({routes: []});
   if (origine != null && destination != null) {
+    $(".loading").css('visibility', 'visible');
+    $(".loading").show();
     if(selectedmode === 0){
-      $(".loading").css('visibility', 'visible');
-      $(".loading").show();
       service.route({
         origin: origine,
         destination: destination,
@@ -338,9 +338,14 @@ function displayRoute(service, display, origine, destination) {
         var test = {"type": "FeatureCollection",
         "features":features};
 
+        for (var i = 0; i < GEOJSON_DATA.length; i++)
+              map.data.remove(GEOJSON_DATA[i]);
         //console.log(JSON.stringify(test));
-        map.data.addGeoJson(test);
+        GEOJSON_DATA = map.data.addGeoJson(test);
         $(".loading").hide();
+        $("#ResultatConvivial").hide();
+        $("#ResultatConvivial").val("87% Convivial");
+        $("#ResultatConvivial").slideUp();
       }
     });
   }
@@ -493,7 +498,7 @@ map.setOptions({styles: styles});
       if(code == "3. Rouge")
         color = "red";
       if(code == "4. Manquant")
-          color = "";
+          color = "white";
       if(code=="5. Interdit aux cyclistes")
           color="black";
       return {

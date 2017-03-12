@@ -149,3 +149,6 @@ i#icob{
 .glyphicon{
   margin-right: 5px;
 }
+* {
+  border-radius: 0 !important;
+}

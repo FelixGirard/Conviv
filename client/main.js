@@ -23,16 +23,20 @@ var mypos;
 
 // var feats = [];
 // var test = {"type": "FeatureCollection",
-// "features":feats}
-//     Meteor.call('getRues', {
-//     }, (err, res) => {
-//       if (err) {
-//         alert(err);
-//       } else {
-//         // success!
-//         test = {"type": "FeatureCollection",
-//         "features":res};
-//         map.data.addGeoJson(test);
+//"features":feats}
+
+//    Meteor.call('getRues', {
+//    }, (err, res) => {
+//   if (err) {
+//     console.log("error");
+//     alert(err);
+//   } else {
+//     console.log("success");
+//
+//     // success!
+//     test = {"type": "FeatureCollection",
+//     "features":res};
+//     map.data.addGeoJson(test);
 //       }
 //     });
 
@@ -106,13 +110,12 @@ Meteor.call('getAccidents', "BD PFDS", (err, res) => {
         // Get the place details from the autocomplete object.
         var place = aautocomplete.getPlace();
 
-        txt_origin_pos = place.geometry.location;
+        //var bikeLayer = new google.maps.BicyclingLayer();
         if (autodest && autoorigin)
         {
           displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
         }
       }
-
       // Bias the autocomplete object to the user's geographical location,
       // as supplied by the browser's 'navigator.geolocation' object.
       function ageolocate() {
@@ -129,12 +132,12 @@ Meteor.call('getAccidents', "BD PFDS", (err, res) => {
             });
             aautocomplete.setBounds(circle.getBounds());
           });
-        }
+  }
         var marker = new google.maps.Marker({
           position: mypos,
           title:'My Position',
           icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
-        });
+ });
         marker.setMap(map);
       }
     // -- AUTO COMPLETE END --
@@ -257,6 +260,85 @@ function displayRoute(service, display, origine, destination) {
         travelMode: google.maps.TravelMode.BICYCLING,
       },
       function(response, status) {
+    var  coordonness = [];
+    for(i=0;i<response.routes[1].overview_path.length;i++)
+     coordonness[i] = {lat:response.routes[1].overview_path[i].lat(),lng:response.routes[1].overview_path[i].lng()};
+    Meteor.call('getColor', coordonness, (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        // success!
+
+        var features = [];
+        var tempCouleur = "";
+
+        var compteurFeature = 0;
+        var compteurCoordinates = 0;
+
+        if(res.length > 0)
+        {
+          features[compteurFeature] = {};
+          features[compteurFeature].properties = {};
+          features[compteurFeature].geometry = {};
+          features[compteurFeature].type ="Feature";
+          features[compteurFeature].geometry.type = "MultiLineString";
+          features[compteurFeature].geometry.coordinates=[];
+          features[compteurFeature].geometry.coordinates[compteurCoordinates]=[];
+        for(i = 0;i<res.length;i++)
+        {
+          if(res[i] != null && res[i].coor != null && res[i].code != null)
+          {
+            if(res[i].code == tempCouleur)
+            {
+
+              features[compteurFeature].geometry.coordinates[compteurCoordinates] = []
+              features[compteurFeature].geometry.coordinates[compteurCoordinates][0] =  res[i].coor.lng;
+              features[compteurFeature].geometry.coordinates[compteurCoordinates++][1] =  res[i].coor.lat;
+
+            }else {
+                  tempCouleur = res[i].code;
+              if(features[compteurFeature].geometry.coordinates.length == 1)
+              {
+                  features[compteurFeature].properties.code = res[i].code;
+
+                  features[compteurFeature].geometry.coordinates[compteurCoordinates] = []
+                  features[compteurFeature].geometry.coordinates[compteurCoordinates][0] =  res[i].coor.lng;
+                 features[compteurFeature].geometry.coordinates[compteurCoordinates++][1] =  res[i].coor.lat;
+            }else{
+              if(features[compteurFeature].geometry.coordinates.length == 1)
+                console.log("length == 1 !?!?");
+              features[++compteurFeature] = {};
+              features[compteurFeature].properties = {};
+              features[compteurFeature].geometry = {};
+              features[compteurFeature].properties.code = res[i].code;
+              features[compteurFeature].type ="Feature";
+              features[compteurFeature].geometry.type = "MultiLineString";
+              compteurCoordinates = 0;
+              features[compteurFeature].geometry.coordinates=[];
+              // features[compteurFeature].geometry.coordinates[0]=[];
+              features[compteurFeature].geometry.coordinates[compteurCoordinates]=[];
+
+              features[compteurFeature].geometry.coordinates[compteurCoordinates][0] = res[i].coor.lng;
+              features[compteurFeature].geometry.coordinates[compteurCoordinates++][1] = res[i].coor.lat;
+            }
+            }
+          }
+        }
+      }
+
+      for(i=0;i<compteurFeature + 1;i++){
+        var test = [];
+        test[0] = features[i].geometry.coordinates;
+        features[i].geometry.coordinates = test;
+      }
+        test = {"type": "FeatureCollection",
+        "features":features};
+
+        console.log(JSON.stringify(test));
+        map.data.addGeoJson(test);
+
+      }
+    });
         if (status === google.maps.DirectionsStatus.OK) {
           var color;
           display.setMap(map);
@@ -410,7 +492,7 @@ map.setOptions({styles: styles});
       return {
         strokeColor: color,
         strokeWeight: 3,
-        strokeOpacity: 0.5
+        strokeOpacity:0.5
       };
     });
 
@@ -431,12 +513,14 @@ Template.menu.events({
 
 Template.menu.events({
   'focus #autocomplete'(event, instance) {
+
     geolocate();
   },
 });
 
 Template.menu.events({
   'focus #destautocomplete'(event, instance) {
+
     dgeolocate();
   },
 });

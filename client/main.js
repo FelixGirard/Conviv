@@ -38,22 +38,75 @@ function EmpruntEco(itdistance, itduration){
     document.getElementById("fixed2").innerHTML = emprunt_carbon
 }
 
-var feats = [];
-var test = {"type": "FeatureCollection",
-"features":feats}
-    Meteor.call('getRues', {
-    }, (err, res) => {
-      if (err) {
-        alert(err);
-      } else {
-        // success!
-        test = {"type": "FeatureCollection",
-        "features":res};
-        map.data.addGeoJson(test);
-        //var bikeLayer = new google.maps.BicyclingLayer();
-        //bikeLayer.setMap(map);
+// var feats = [];
+// var test = {"type": "FeatureCollection",
+// "features":feats}
+//     Meteor.call('getRues', {
+//     }, (err, res) => {
+//       if (err) {
+//         alert(err);
+//       } else {
+//         // success!
+//         test = {"type": "FeatureCollection",
+//         "features":res};
+//         map.data.addGeoJson(test);
+//         //var bikeLayer = new google.maps.BicyclingLayer();
+//         //bikeLayer.setMap(map);
+//       }
+//     });
+
+    // -- AUTO COMPLETE START --
+      var aplaceSearch, aautocomplete;
+
+      function ainitAutocomplete() {
+        // Create the autocomplete object, restricting the search to geographical
+        // location types.
+        aautocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById('aautocomplete')),
+            {types: ['address']});
+
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        aautocomplete.addListener('place_changed', afillInAddress);
+        autoorigin = true;
       }
-    });
+
+      function afillInAddress() {
+        // Get the place details from the autocomplete object.
+        var place = aautocomplete.getPlace();
+
+        txt_origin_pos = place.geometry.location;
+        if (autodest && autoorigin)
+        {
+          displayRoute(directionsService, directionsDisplay, txt_origin_pos, txt_dest_pos);
+        }
+      }
+
+      // Bias the autocomplete object to the user's geographical location,
+      // as supplied by the browser's 'navigator.geolocation' object.
+      function ageolocate() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var geolocation = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+            mypos = geolocation
+            var circle = new google.maps.Circle({
+              center: geolocation,
+              radius: position.coords.accuracy
+            });
+            aautocomplete.setBounds(circle.getBounds());
+          });
+        }
+        var marker = new google.maps.Marker({
+          position: mypos,
+          title:'My Position',
+          icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+        });
+        marker.setMap(map);
+      }
+    // -- AUTO COMPLETE END --
 
 // -- AUTO COMPLETE START --
   var placeSearch, autocomplete;

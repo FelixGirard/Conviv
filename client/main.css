@@ -51,7 +51,7 @@ text-align:center;
 #calories{
   position:absolute;
   max-width: 65px;
-  bottom: 75px;
+  bottom: 35px;
   right:42px;
   background-color:white;
   border: 3px solid black;
@@ -59,7 +59,7 @@ text-align:center;
 #fixed {
   position:absolute;
   width: 78px;
-  bottom: 75px;
+  bottom: 35px;
   right:106px;
   text-align-last:right;
   background-color:white;
@@ -68,7 +68,7 @@ text-align:center;
 #EmpruntEco {
   position:absolute;
   max-width: 65px;
-  bottom: 97px;
+  bottom: 57px;
   right:42px;
   background-color:white;
   border: 3px solid black;
@@ -76,7 +76,7 @@ text-align:center;
 #fixed2 {
   position:absolute;
   width: 78px;
-  bottom: 97px;
+  bottom: 57px;
   right:106px;
   text-align-last:right;
   background-color:white;
@@ -85,8 +85,42 @@ text-align:center;
 
 #fixed3 {
   position:absolute;
-  width: 100px;
-  bottom: -67px;
-  right:89px;
+  width: 200px;
+  bottom: 20px;
+  right:70px;
+  padding-left: 60px;
   text-align-last:right;
+}
+
+.share-buttons .shareit-pinterest-colors {
+    visibility: hidden;
+}
+
+.share-buttons .shareit-google-colors {
+    visibility: hidden;
+}
+
+.tw-share{
+  width :190px;
+}
+
+.fb-share{
+  width :190px;
+}
+
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  right: 3px;
+  background-color: #337ab7;
+}
+
+.glyphicon{
+  margin-right: 5px;
 }

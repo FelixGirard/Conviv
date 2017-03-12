@@ -43,6 +43,7 @@ var test = {"type": "FeatureCollection",
     var donneeadditionnelle = {"type": "FeatureCollection",
     "features":res};
     map.data.addGeoJson(donneeadditionnelle);
+        $("#FirstPage").fadeOut();
       }
     });
 

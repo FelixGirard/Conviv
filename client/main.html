@@ -5,17 +5,23 @@
 </head>
 
 <body>
-
+  {{> logo}}
   {{> menu}}
   {{> mapPostsList}}
-  {{> boite}}
-  {{> boite2}}
+  <!-- {{> boite}}
+  {{> boite2}} -->
   {{> share}}
 </body>
 
 <template name="mapPostsList">
   <div id="map" class="map">
     <div id="map-canvas" class="map-container"></div>
+  </div>
+</template>
+
+<template name="logo">
+  <div id="logo" class="logo">
+    <img src="logoseul.png" height=155px width=155px>
   </div>
 </template>
 
@@ -37,7 +43,7 @@
   </div>
 </template>
 
-<template name="boite">
+<!-- <template name="boite">
     <div id="fixed">
         ##
     </div>
@@ -53,4 +59,4 @@
     <div id="EmpruntEco" class="col-sm-12">
         g/km
     </div>
-</template>
+</template> -->

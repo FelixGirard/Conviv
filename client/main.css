@@ -2,12 +2,33 @@
 html, body {
   height: 100%;
 }
+
+img {
+    display: inline-block;
+}
+
+.logo{
+  position:absolute;
+  right:5px;
+  top:5px;
+  z-index: 3;
+}
+
 #menu{
   margin-top:10px;
 position:absolute;
 z-index:3;
 text-align:center;
 }
+
+#autocomplete{
+  width:87%;
+}
+
+#destautocomplete{
+  width:87%;
+}
+
 .map {
   height: 100%;
 }
@@ -47,7 +68,7 @@ text-align:center;
   border-radius: 6px;
 }
 
-
+/*
 #calories{
   position:absolute;
   max-width: 65px;
@@ -81,12 +102,12 @@ text-align:center;
   text-align-last:right;
   background-color:white;
   border: 3px solid black;
-}
+}*/
 
 #fixed3 {
   position:absolute;
   width: 200px;
-  bottom: 20px;
+  bottom: 0px;
   right:70px;
   padding-left: 60px;
   text-align-last:right;

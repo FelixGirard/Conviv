@@ -13,6 +13,14 @@ img {
   top:5px;
   z-index: 3;
 }
+.loading{
+  position:absolute;
+  left:5px;
+  bottom:5px;
+  z-index: 3;
+  visibility: hidden;
+}
+
 
 #menu{
   margin-top:10px;

@@ -6,6 +6,7 @@
 
 <body>
   {{> logo}}
+  {{> loading_refresh}}
   {{> menu}}
   {{> mapPostsList}}
   <!-- {{> boite}}
@@ -22,6 +23,11 @@
 <template name="logo">
   <div id="logo" class="logo">
     <img src="logoseulvertt.png" height=155px width=155px>
+  </div>
+</template>
+<template name="loading_refresh">
+  <div id="loading_refresh" class="loading">
+    <img src="loadingGIF.gif" height=100px width=100px>
   </div>
 </template>
 

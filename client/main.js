@@ -252,6 +252,7 @@ function displayRoute(service, display, origine, destination) {
   //display.setDirections({routes: []});
   if (origine != null && destination != null) {
     if(selectedmode === 0){
+      $(".loading").show();
       service.route({
         origin: origine,
         destination: destination,
@@ -338,7 +339,7 @@ function displayRoute(service, display, origine, destination) {
 
         //console.log(JSON.stringify(test));
         map.data.addGeoJson(test);
-
+        $(".loading").show();
       }
     });
   }
@@ -496,7 +497,7 @@ map.setOptions({styles: styles});
           color="black";
       return {
         strokeColor: color,
-        strokeWeight: 3,
+        strokeWeight: 5,
         strokeOpacity:0.5
       };
     });

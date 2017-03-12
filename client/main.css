@@ -52,8 +52,12 @@ text-align:center;
   padding-left: 20px;
 }
 
-#walk:active{
-  background-color: #fff;
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus{
+  background-color: #6fc802;
+}
+
+i#icob{
+  color: #000;
 }
 
 #walk{

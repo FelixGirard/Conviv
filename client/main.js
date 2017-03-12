@@ -21,23 +21,6 @@ var autodest = false;
 
 var mypos;
 
-var calories;
-var emprunt_carbon;
-
-function Calories_Spend(itdistance){
-    calories = itdistance * 0.02366;
-    calories = Math.round(calories);
-    document.getElementById("fixed").innerHTML = calories
-
-}
-
-function EmpruntEco(itdistance, itduration){
-    emprunt_carbon = itdistance * 125;
-    emprunt_carbon /= 1000;
-    emprunt_carbon = Math.round(emprunt_carbon);
-    document.getElementById("fixed2").innerHTML = emprunt_carbon
-}
-
 // var feats = [];
 // var test = {"type": "FeatureCollection",
 // "features":feats}
@@ -52,6 +35,56 @@ function EmpruntEco(itdistance, itduration){
 //         map.data.addGeoJson(test);
 //       }
 //     });
+
+Meteor.call('getAccidents', "BD PFDS", (err, res) => {
+      if (err) {
+        alert(err);
+      } else {
+        //console.log(res);
+      }
+      });
+
+      var getFromBetween = {
+          results:[],
+          string:"",
+          getFromBetween:function (sub1,sub2) {
+              if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+              var SP = this.string.indexOf(sub1)+sub1.length;
+              var string1 = this.string.substr(0,SP);
+              var string2 = this.string.substr(SP);
+              var TP = string1.length + string2.indexOf(sub2);
+              return this.string.substring(SP,TP);
+          },
+          removeFromBetween:function (sub1,sub2) {
+              if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return false;
+              var removal = sub1+this.getFromBetween(sub1,sub2)+sub2;
+              this.string = this.string.replace(removal,"");
+          },
+          getAllResults:function (sub1,sub2) {
+              // first check to see if we do have both substrings
+              if(this.string.indexOf(sub1) < 0 || this.string.indexOf(sub2) < 0) return;
+
+              // find one result
+              var result = this.getFromBetween(sub1,sub2);
+              // push it to the results array
+              this.results.push(result);
+              // remove the most recently found one from the string
+              this.removeFromBetween(sub1,sub2);
+
+              // if there's more substrings
+              if(this.string.indexOf(sub1) > -1 && this.string.indexOf(sub2) > -1) {
+                  this.getAllResults(sub1,sub2);
+              }
+              else return;
+          },
+          get:function (string,sub1,sub2) {
+              this.results = [];
+              this.string = string;
+              this.getAllResults(sub1,sub2);
+              return this.results;
+          }
+      };
+
 
     // -- AUTO COMPLETE START --
       var aplaceSearch, aautocomplete;
@@ -213,7 +246,6 @@ function EmpruntEco(itdistance, itduration){
 
 //Fonction qui affiche le trajet
 function displayRoute(service, display, origine, destination) {
-  console.log("xdé");
   //display.setDirections({routes: []});
   if (origine != null && destination != null) {
     if(selectedmode === 0){
@@ -225,7 +257,6 @@ function displayRoute(service, display, origine, destination) {
         travelMode: google.maps.TravelMode.BICYCLING,
       },
       function(response, status) {
-        console.log("xdé");
         if (status === google.maps.DirectionsStatus.OK) {
           var color;
           display.setMap(map);
@@ -234,51 +265,28 @@ function displayRoute(service, display, origine, destination) {
           var pointsArray = [];
           pointsArray = response.routes[0].overview_path;
 
-          // var point1 = new google.maps.Marker ({
-          //                               position:pointsArray[0],
-          //                               draggable:true,
-          //                               map:map,
-          //                               flat:true
-          //                               });
-          //
-          //                           var point2 = new google.maps.Marker ({
-          //                               position:pointsArray[1],
-          //                               draggable:true,
-          //                               map:map,
-          //                               flat:true
-          //                               });
-          //
-          //                           var point3 = new google.maps.Marker ({
-          //                               position:pointsArray[2],
-          //                               draggable:true,
-          //                               map:map,
-          //                               flat:true
-          //                               });
-          //
-          //                           var point4 = new google.maps.Marker ({
-          //                               position:pointsArray[3],
-          //                               draggable:true,
-          //                               map:map,
-          //                               flat:true
-          //                               });
-          // console.log(response.routes[0].overview_path[0]);
-          // console.log(response.routes[0].overview_path[0].lat());
-          // console.log(response.routes[0].overview_path[0].lng());
-          // for (var i = 0, len = response.routes.length; i < len; i++) {
-          //   itdistance = response.routes[i].legs[0].distance.value;
-          //   itduration = response.routes[i].legs[0].duration.value;
-          //   Calories_Spend(itdistance);
-          //   console.log(calories);
-          //   EmpruntEco(itdistance);
-          //   console.log(emprunt_carbon);
-          //
-          //   console.log("okéééé");
-          //   var maRoute = response.routes[0].legs[0];
-          //   for (var j = 0, len = maRoute.steps.length; j < len; j++) {
-          //      console.log(maRoute.steps[i].instructions+' -> '+maRoute.steps[i].distance.value);
-          //     console.log("ok");
-          //   }
-          // }
+
+          for (var i = 0, len = response.routes.length; i < len; i++) {
+
+            var acciarray = [];
+            var maRoute = response.routes[0].legs[0];
+            for (var j = 0, len = maRoute.steps.length; j < len; j++) {
+               console.log(maRoute.steps[j].instructions);
+               var str = maRoute.steps[j].instructions;
+               var accirues = getFromBetween.get(str,"<b>","</b>");
+               if (accirues.length == 2) {
+                 accirues.splice(0, 1);
+                 acciarray[j] = accirues[0];
+                 console.log(accirues);
+               }else if (accirues.length == 3) {
+                 accirues.splice(2, 1);
+                 accirues.splice(0, 1);
+                 acciarray[j] = accirues[0];
+                 console.log(accirues);
+               }
+               }
+          }
+          console.log(acciarray);
             // polylineOptionsActual = {
             //  strokeColor: color, strokeWeight: 6
             // };
@@ -289,8 +297,8 @@ function displayRoute(service, display, origine, destination) {
           //     polylineOptions: { strokeColor: color, strokeWeight: 6 }
           // });
         // }
-          // display.setDirections(response);
-          // console.log(response);
+          display.setDirections(response);
+          console.log(response);
         } else {
           //alert('Could not display directions due to: ' + status);
         }
@@ -304,7 +312,6 @@ function displayRoute(service, display, origine, destination) {
     travelMode: google.maps.TravelMode.WALKING,
   },
   function(response, status) {
-    console.log("xdé");
     if (status === google.maps.DirectionsStatus.OK) {
       var color;
       display.setMap(map);
@@ -313,10 +320,8 @@ function displayRoute(service, display, origine, destination) {
       for (var i = 0, len = response.routes.length; i < len; i++) {
         itdistance = response.routes[i].legs[0].distance.value;
         itduration = response.routes[i].legs[0].duration.value;
-        Calories_Spend(itdistance);
-        console.log(calories);
-        EmpruntEco(itdistance);
-        console.log(emprunt_carbon);
+        // Calories_Spend(itdistance);
+        // EmpruntEco(itdistance);
       }
         // polylineOptionsActual = {
         //  strokeColor: color, strokeWeight: 6
@@ -445,7 +450,6 @@ Template.menu.events({
     var wgroup = $("#walk");
     $(bgroup).removeClass(aClass);
     $(wgroup).addClass(aClass);
-    console.log(selectedmode);
   },
 });
 
@@ -458,6 +462,5 @@ Template.menu.events({
     var wgroup = $("#walk");
     $(wgroup).removeClass(aClass);
     $(bgroup).addClass(aClass);
-    console.log(selectedmode);
   },
 });

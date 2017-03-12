@@ -252,6 +252,7 @@ function displayRoute(service, display, origine, destination) {
   //display.setDirections({routes: []});
   if (origine != null && destination != null) {
     if(selectedmode === 0){
+      $(".loading").css('visibility', 'visible');
       $(".loading").show();
       service.route({
         origin: origine,
@@ -339,7 +340,7 @@ function displayRoute(service, display, origine, destination) {
 
         //console.log(JSON.stringify(test));
         map.data.addGeoJson(test);
-        $(".loading").show();
+        $(".loading").hide();
       }
     });
   }

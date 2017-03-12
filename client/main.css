@@ -15,9 +15,9 @@ img {
 }
 .loading{
   position:absolute;
-  left:5px;
-  bottom:5px;
-  z-index: 3;
+  left:15px;
+  bottom:30px;
+  z-index: 4;
   visibility: hidden;
 }
 

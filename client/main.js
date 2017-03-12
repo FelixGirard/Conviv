@@ -228,6 +228,8 @@ function displayRoute(service, display, origine, destination) {
       },
       function(response, status) {
     var  coordonness = [];
+    if(response.routes[0].overview_path!=null)
+    {
     for(i=0;i<response.routes[0].overview_path.length;i++)
      coordonness[i] = {lat:response.routes[0].overview_path[i].lat(),lng:response.routes[0].overview_path[i].lng()};
     Meteor.call('getColor', coordonness, (err, res) => {
@@ -298,7 +300,7 @@ function displayRoute(service, display, origine, destination) {
         test[0] = features[i].geometry.coordinates;
         features[i].geometry.coordinates = test;
       }
-        test = {"type": "FeatureCollection",
+        var test = {"type": "FeatureCollection",
         "features":features};
 
         //console.log(JSON.stringify(test));
@@ -306,6 +308,7 @@ function displayRoute(service, display, origine, destination) {
 
       }
     });
+  }
         if (status === google.maps.DirectionsStatus.OK) {
           var color;
           display.setMap(map);

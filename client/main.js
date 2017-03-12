@@ -228,8 +228,8 @@ function displayRoute(service, display, origine, destination) {
       },
       function(response, status) {
     var  coordonness = [];
-    for(i=0;i<response.routes[1].overview_path.length;i++)
-     coordonness[i] = {lat:response.routes[1].overview_path[i].lat(),lng:response.routes[1].overview_path[i].lng()};
+    for(i=0;i<response.routes[0].overview_path.length;i++)
+     coordonness[i] = {lat:response.routes[0].overview_path[i].lat(),lng:response.routes[0].overview_path[i].lng()};
     Meteor.call('getColor', coordonness, (err, res) => {
       if (err) {
         alert(err);
@@ -301,7 +301,7 @@ function displayRoute(service, display, origine, destination) {
         test = {"type": "FeatureCollection",
         "features":features};
 
-        console.log(JSON.stringify(test));
+        //console.log(JSON.stringify(test));
         map.data.addGeoJson(test);
 
       }
@@ -384,7 +384,6 @@ function displayRoute(service, display, origine, destination) {
     travelMode: google.maps.TravelMode.WALKING,
   },
   function(response, status) {
-    console.log("xdé");
     if (status === google.maps.DirectionsStatus.OK) {
       var color;
       display.setMap(map);
@@ -393,10 +392,6 @@ function displayRoute(service, display, origine, destination) {
       for (var i = 0, len = response.routes.length; i < len; i++) {
         itdistance = response.routes[i].legs[0].distance.value;
         itduration = response.routes[i].legs[0].duration.value;
-        Calories_Spend(itdistance);
-        console.log(calories);
-        EmpruntEco(itdistance);
-        console.log(emprunt_carbon);
       }
         // polylineOptionsActual = {
         //  strokeColor: color, strokeWeight: 6
@@ -475,13 +470,17 @@ map.setOptions({styles: styles});
 
   map.data.setStyle(function(feature) {
       var code = feature.getProperty('code');
-      var color = 'black';
+      var color = '';
       if(code == "2. Jaune")
         color = "orange";
       if(code == "1. Vert")
         color = "green";
       if(code == "3. Rouge")
         color = "red";
+      if(code == "4. Manquant")
+          color = "";
+      if(code=="5. Interdit aux cyclistes")
+          color="black";
       return {
         strokeColor: color,
         strokeWeight: 3,

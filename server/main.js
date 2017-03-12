@@ -16,10 +16,6 @@ Meteor.startup(() => {
     //console.log(coordonnes);
     for(i=0;i< Rues.find().count();i++)
     {
-          //console.log("i:" + i);
-          //console.log(coords);
-          //console.log(coords[0]);
-          //console.log(coords[1]);
           for(j=0;j<rues[i].geometry.coordinates[0].length;j++)
           {
             for(k=0;k<coordonnes.length;k++)
@@ -27,7 +23,7 @@ Meteor.startup(() => {
               //console.log(coordonnes[k]);
               coords = rues[i].geometry.coordinates[0][j];
               //console.log(coords);
-              if(Math.sqrt(Math.pow(parseFloat(coords[0]) - parseFloat(coordonnes[k].lng),2) +(Math.pow(parseFloat(coords[1]) - parseFloat(coordonnes[k].lat),2))) < 0.001)
+              if(Math.sqrt(Math.pow(parseFloat(coords[0]) - parseFloat(coordonnes[k].lng),2) +(Math.pow(parseFloat(coords[1]) - parseFloat(coordonnes[k].lat),2))) < 0.005)
               {
                   //console.log("1 found !");
                   //console.log(coords);
@@ -36,16 +32,11 @@ Meteor.startup(() => {
                     result[k] = {};
                     result[k].coor = coordonnes[k];
                     result[k].code = rues[i].properties.code;
-                    console.log(coords);
-                    console.log(coordonnes[k]);
-                    console.log( rues[i].properties.odonyme_pr);
-                    console.log( rues[i].properties.gid);
                   }
               }
            }
         }
     }
-    console.log(result);
 		return result;
 }
   });
